@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureFirewalls_O3MFW_name": {
+            "value": null
+        },
+        "bastionHosts_vmssbastio_name": {
+            "value": null
+        },
+        "publicIPAddresses_FWPIP_name": {
+            "value": null
+        },
+        "publicIPAddresses_VPN_PIP_name": {
+            "value": null
+        },
+        "firewallPolicies_O3MPOLICY_name": {
+            "value": null
+        },
+        "publicIPAddresses_bastion_pip_name": {
+            "value": null
+        },
+        "virtualNetworkGateways_O3MVPN_name": {
+            "value": null
+        },
+        "virtualNetworks_Vnet_Sharedservices_FranceCentral_O3M_name": {
+            "value": null
+        },
+        "virtualNetworks_Vnet_Sales_FranceCentral_O3M_externalid": {
+            "value": null
+        },
+        "virtualNetworks_Vnet_Marketing_FranceCentral_O3M_externalid": {
+            "value": null
+        }
+    }
+}

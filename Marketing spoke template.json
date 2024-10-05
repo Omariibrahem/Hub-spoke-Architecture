@@ -1,0 +1,1107 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccounts_blobmarketingo3m_name": {
+            "defaultValue": "blobmarketingo3m",
+            "type": "String"
+        },
+        "networkSecurityGroups_StaticWebApp_NSG_name": {
+            "defaultValue": "StaticWebApp-NSG",
+            "type": "String"
+        },
+        "privateEndpoints_PE_Markting_FranceCentral_name": {
+            "defaultValue": "PE-Markting-FranceCentral",
+            "type": "String"
+        },
+        "sites_StaticWebApp_Marketing_FranceCentral_O3M_name": {
+            "defaultValue": "StaticWebApp-Marketing-FranceCentral-O3M",
+            "type": "String"
+        },
+        "serverfarms_ASP_RGMarketingFranceCentralO3M_8d87_name": {
+            "defaultValue": "ASP-RGMarketingFranceCentralO3M-8d87",
+            "type": "String"
+        },
+        "virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name": {
+            "defaultValue": "Vnet-Marketing-FranceCentral-O3M",
+            "type": "String"
+        },
+        "privateDnsZones_privatelink_file_core_windows_net_name": {
+            "defaultValue": "privatelink.file.core.windows.net",
+            "type": "String"
+        },
+        "actionGroups_Application_Insights_Smart_Detection_name": {
+            "defaultValue": "Application Insights Smart Detection",
+            "type": "String"
+        },
+        "components_StaticWebApp_Marketing_FranceCentral_O3M_name": {
+            "defaultValue": "StaticWebApp-Marketing-FranceCentral-O3M",
+            "type": "String"
+        },
+        "workspaces_DefaultWorkspace_9f1175b8_7059_4b6a_8c09_43032c79d56c_PAR_externalid": {
+            "defaultValue": "/subscriptions/9f1175b8-7059-4b6a-8c09-43032c79d56c/resourceGroups/DefaultResourceGroup-PAR/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-9f1175b8-7059-4b6a-8c09-43032c79d56c-PAR",
+            "type": "String"
+        },
+        "virtualNetworks_Vnet_Sharedservices_FranceCentral_O3M_externalid": {
+            "defaultValue": "/subscriptions/9f1175b8-7059-4b6a-8c09-43032c79d56c/resourceGroups/RG-Sharedservices-FranceCentral-O3M/providers/Microsoft.Network/virtualNetworks/Vnet-Sharedservices-FranceCentral-O3M",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/actionGroups",
+            "apiVersion": "2023-09-01-preview",
+            "name": "[parameters('actionGroups_Application_Insights_Smart_Detection_name')]",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "SmartDetect",
+                "enabled": true,
+                "emailReceivers": [],
+                "smsReceivers": [],
+                "webhookReceivers": [],
+                "eventHubReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": [],
+                "armRoleReceivers": [
+                    {
+                        "name": "Monitoring Contributor",
+                        "roleId": "749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                        "useCommonAlertSchema": true
+                    },
+                    {
+                        "name": "Monitoring Reader",
+                        "roleId": "43d0d8ad-25c7-4714-9337-8ba259a9fe05",
+                        "useCommonAlertSchema": true
+                    }
+                ]
+            }
+        },
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name')]",
+            "location": "francecentral",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "RetentionInDays": 90,
+                "WorkspaceResourceId": "[parameters('workspaces_DefaultWorkspace_9f1175b8_7059_4b6a_8c09_43032c79d56c_PAR_externalid')]",
+                "IngestionMode": "LogAnalytics",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2024-01-01",
+            "name": "[parameters('networkSecurityGroups_StaticWebApp_NSG_name')]",
+            "location": "francecentral",
+            "properties": {
+                "securityRules": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2024-06-01",
+            "name": "[parameters('privateDnsZones_privatelink_file_core_windows_net_name')]",
+            "location": "global",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-05-01",
+            "name": "[parameters('storageAccounts_blobmarketingo3m_name')]",
+            "location": "francecentral",
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "dnsEndpointType": "Standard",
+                "defaultToOAuthAuthentication": false,
+                "publicNetworkAccess": "Enabled",
+                "allowCrossTenantReplication": false,
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": true,
+                "largeFileSharesState": "Enabled",
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "requireInfrastructureEncryption": false,
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2023-12-01",
+            "name": "[parameters('serverfarms_ASP_RGMarketingFranceCentralO3M_8d87_name')]",
+            "location": "France Central",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "size": "S1",
+                "family": "S",
+                "capacity": 1
+            },
+            "kind": "app",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/degradationindependencyduration')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "degradationindependencyduration",
+                    "DisplayName": "Degradation in dependency duration",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/degradationinserverresponsetime')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "degradationinserverresponsetime",
+                    "DisplayName": "Degradation in server response time",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/digestMailConfiguration')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "digestMailConfiguration",
+                    "DisplayName": "Digest Mail Configuration",
+                    "Description": "This rule describes the digest mail preferences",
+                    "HelpUrl": "www.homail.com",
+                    "IsHidden": true,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/extension_billingdatavolumedailyspikeextension')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_billingdatavolumedailyspikeextension",
+                    "DisplayName": "Abnormal rise in daily data volume (preview)",
+                    "Description": "This detection rule automatically analyzes the billing data generated by your application, and can warn you about an unusual increase in your application's billing costs",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/tree/master/SmartDetection/billing-data-volume-daily-spike.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/extension_canaryextension')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_canaryextension",
+                    "DisplayName": "Canary extension",
+                    "Description": "Canary extension",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/",
+                    "IsHidden": true,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/extension_exceptionchangeextension')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_exceptionchangeextension",
+                    "DisplayName": "Abnormal rise in exception volume (preview)",
+                    "Description": "This detection rule automatically analyzes the exceptions thrown in your application, and can warn you about unusual patterns in your exception telemetry.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/abnormal-rise-in-exception-volume.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/extension_memoryleakextension')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_memoryleakextension",
+                    "DisplayName": "Potential memory leak detected (preview)",
+                    "Description": "This detection rule automatically analyzes the memory consumption of each process in your application, and can warn you about potential memory leaks or increased memory consumption.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/tree/master/SmartDetection/memory-leak.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/extension_securityextensionspackage')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_securityextensionspackage",
+                    "DisplayName": "Potential security issue detected (preview)",
+                    "Description": "This detection rule automatically analyzes the telemetry generated by your application and detects potential security issues.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/application-security-detection-pack.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/extension_traceseveritydetector')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_traceseveritydetector",
+                    "DisplayName": "Degradation in trace severity ratio (preview)",
+                    "Description": "This detection rule automatically analyzes the trace logs emitted from your application, and can warn you about unusual patterns in the severity of your trace telemetry.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/degradation-in-trace-severity-ratio.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/longdependencyduration')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "longdependencyduration",
+                    "DisplayName": "Long dependency duration",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/migrationToAlertRulesCompleted')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "migrationToAlertRulesCompleted",
+                    "DisplayName": "Migration To Alert Rules Completed",
+                    "Description": "A configuration that controls the migration state of Smart Detection to Smart Alerts",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": true,
+                    "IsEnabledByDefault": false,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": false,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/slowpageloadtime')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "slowpageloadtime",
+                    "DisplayName": "Slow page load time",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/slowserverresponsetime')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "slowserverresponsetime",
+                    "DisplayName": "Slow server response time",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_file_core_windows_net_name'), '/blobmarketingo3m')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]"
+            ],
+            "properties": {
+                "metadata": {
+                    "creator": "created by private endpoint PE-Markting-FranceCentral with resource guid c4fec6b9-60a1-44ca-86d8-98a44f7059e9"
+                },
+                "ttl": 10,
+                "aRecords": [
+                    {
+                        "ipv4Address": "10.10.1.4"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/SOA",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_file_core_windows_net_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]"
+            ],
+            "properties": {
+                "ttl": 3600,
+                "soaRecord": {
+                    "email": "azureprivatedns-host.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "azureprivatedns.net",
+                    "minimumTtl": 10,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2024-01-01",
+            "name": "[parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_StaticWebApp_NSG_name'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.10.0.0/16"
+                    ]
+                },
+                "encryption": {
+                    "enabled": true,
+                    "enforcement": "AllowUnencrypted"
+                },
+                "subnets": [
+                    {
+                        "name": "StaticWebApp-MarketingSubnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'StaticWebApp-MarketingSubnet')]",
+                        "properties": {
+                            "addressPrefixes": [
+                                "10.10.0.0/24"
+                            ],
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_StaticWebApp_NSG_name'))]"
+                            },
+                            "delegations": [
+                                {
+                                    "name": "delegation",
+                                    "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'StaticWebApp-MarketingSubnet'), '/delegations/delegation')]",
+                                    "properties": {
+                                        "serviceName": "Microsoft.Web/serverfarms"
+                                    },
+                                    "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
+                                }
+                            ],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    },
+                    {
+                        "name": "FileShare",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'FileShare')]",
+                        "properties": {
+                            "addressPrefixes": [
+                                "10.10.1.0/24"
+                            ],
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "francecentral",
+                                        "francesouth"
+                                    ]
+                                }
+                            ],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    }
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "name": "HubtoMarkting",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/virtualNetworkPeerings', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'HubtoMarkting')]",
+                        "properties": {
+                            "peeringState": "Connected",
+                            "peeringSyncLevel": "RemoteNotInSync",
+                            "remoteVirtualNetwork": {
+                                "id": "[parameters('virtualNetworks_Vnet_Sharedservices_FranceCentral_O3M_externalid')]"
+                            },
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": true,
+                            "doNotVerifyRemoteGateways": false,
+                            "peerCompleteVnets": true,
+                            "remoteAddressSpace": {
+                                "addressPrefixes": [
+                                    "10.30.0.0/24"
+                                ]
+                            },
+                            "remoteVirtualNetworkAddressSpace": {
+                                "addressPrefixes": [
+                                    "10.30.0.0/24"
+                                ]
+                            }
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings"
+                    }
+                ],
+                "enableDdosProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), '/FileShare')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "addressPrefixes": [
+                    "10.10.1.0/24"
+                ],
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.Storage",
+                        "locations": [
+                            "francecentral",
+                            "francesouth"
+                        ]
+                    }
+                ],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), '/HubtoMarkting')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "peeringState": "Connected",
+                "peeringSyncLevel": "RemoteNotInSync",
+                "remoteVirtualNetwork": {
+                    "id": "[parameters('virtualNetworks_Vnet_Sharedservices_FranceCentral_O3M_externalid')]"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": true,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": true,
+                "doNotVerifyRemoteGateways": false,
+                "peerCompleteVnets": true,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "10.30.0.0/24"
+                    ]
+                },
+                "remoteVirtualNetworkAddressSpace": {
+                    "addressPrefixes": [
+                        "10.30.0.0/24"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2023-05-01",
+            "name": "[concat(parameters('storageAccounts_blobmarketingo3m_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "containerDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2023-05-01",
+            "name": "[concat(parameters('storageAccounts_blobmarketingo3m_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/privateEndpointConnections",
+            "apiVersion": "2023-05-01",
+            "name": "[concat(parameters('storageAccounts_blobmarketingo3m_name'), '/', parameters('storageAccounts_blobmarketingo3m_name'), '.ebbdc451-8c3b-4afa-aa9a-b601f5c0853e')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]"
+            ],
+            "properties": {
+                "privateEndpoint": {},
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "description": "Auto-Approved",
+                    "actionRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2023-05-01",
+            "name": "[concat(parameters('storageAccounts_blobmarketingo3m_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2023-05-01",
+            "name": "[concat(parameters('storageAccounts_blobmarketingo3m_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/ftp')]",
+            "location": "France Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/scm')]",
+            "location": "France Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/web')]",
+            "location": "France Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v6.0",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "REDACTED",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetName": "95ba4e30-c10d-4186-9475-acaae8a2126a_StaticWebApp-MarketingSubnet",
+                "vnetRouteAllEnabled": true,
+                "vnetPrivatePortsCount": 0,
+                "publicNetworkAccess": "Enabled",
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/', parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'), '-b4gyd5hje0gde5ba.francecentral-01.azurewebsites.net')]",
+            "location": "France Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "siteName": "StaticWebApp-Marketing-FranceCentral-O3M",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2024-06-01",
+            "name": "[concat(parameters('privateDnsZones_privatelink_file_core_windows_net_name'), '/ygxtt3ajxr4oa')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "resolutionPolicy": "Default",
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2024-01-01",
+            "name": "[parameters('privateEndpoints_PE_Markting_FranceCentral_name')]",
+            "location": "francecentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'FileShare')]"
+            ],
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('privateEndpoints_PE_Markting_FranceCentral_name')]",
+                        "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_PE_Markting_FranceCentral_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_PE_Markting_FranceCentral_name')))]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]",
+                            "groupIds": [
+                                "file"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "customNetworkInterfaceName": "[concat(parameters('privateEndpoints_PE_Markting_FranceCentral_name'), '-nic')]",
+                "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'FileShare')]"
+                },
+                "ipConfigurations": [],
+                "customDnsConfigs": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('privateEndpoints_PE_Markting_FranceCentral_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_PE_Markting_FranceCentral_name'))]",
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]"
+            ],
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "privatelink-file-core-windows-net",
+                        "properties": {
+                            "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZones_privatelink_file_core_windows_net_name'))]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2024-01-01",
+            "name": "[concat(parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), '/StaticWebApp-MarketingSubnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_StaticWebApp_NSG_name'))]"
+            ],
+            "properties": {
+                "addressPrefixes": [
+                    "10.10.0.0/24"
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_StaticWebApp_NSG_name'))]"
+                },
+                "delegations": [
+                    {
+                        "name": "delegation",
+                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'StaticWebApp-MarketingSubnet'), '/delegations/delegation')]",
+                        "properties": {
+                            "serviceName": "Microsoft.Web/serverfarms"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
+                    }
+                ],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2023-05-01",
+            "name": "[concat(parameters('storageAccounts_blobmarketingo3m_name'), '/default/staticwebappdata')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_blobmarketingo3m_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "Blob"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2023-05-01",
+            "name": "[concat(parameters('storageAccounts_blobmarketingo3m_name'), '/default/filesharemarkting')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_blobmarketingo3m_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_blobmarketingo3m_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 5120,
+                "enabledProtocols": "SMB"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2023-12-01",
+            "name": "[parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name')]",
+            "location": "France Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_RGMarketingFranceCentralO3M_8d87_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'StaticWebApp-MarketingSubnet')]"
+            ],
+            "kind": "app",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "staticwebapp-marketing-francecentral-o3m-b4gyd5hje0gde5ba.francecentral-01.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "staticwebapp-marketing-francecentral-o3m-b4gyd5hje0gde5ba.scm.francecentral-01.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_RGMarketingFranceCentralO3M_8d87_name'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "dnsConfiguration": {},
+                "vnetRouteAllEnabled": true,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "vnetBackupRestoreEnabled": false,
+                "customDomainVerificationId": "F2D405882741B7ADB39C3F74EB49C1ADAF776EEC3456E9FB249F7D982451E089",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "publicNetworkAccess": "Enabled",
+                "storageAccountRequired": false,
+                "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'StaticWebApp-MarketingSubnet')]",
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/virtualNetworkConnections",
+            "apiVersion": "2023-12-01",
+            "name": "[concat(parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'), '/95ba4e30-c10d-4186-9475-acaae8a2126a_StaticWebApp-MarketingSubnet')]",
+            "location": "France Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_StaticWebApp_Marketing_FranceCentral_O3M_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'StaticWebApp-MarketingSubnet')]"
+            ],
+            "properties": {
+                "vnetResourceId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name'), 'StaticWebApp-MarketingSubnet')]",
+                "isSwift": true
+            }
+        }
+    ]
+}

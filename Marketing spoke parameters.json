@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccounts_blobmarketingo3m_name": {
+            "value": null
+        },
+        "networkSecurityGroups_StaticWebApp_NSG_name": {
+            "value": null
+        },
+        "privateEndpoints_PE_Markting_FranceCentral_name": {
+            "value": null
+        },
+        "sites_StaticWebApp_Marketing_FranceCentral_O3M_name": {
+            "value": null
+        },
+        "serverfarms_ASP_RGMarketingFranceCentralO3M_8d87_name": {
+            "value": null
+        },
+        "virtualNetworks_Vnet_Marketing_FranceCentral_O3M_name": {
+            "value": null
+        },
+        "privateDnsZones_privatelink_file_core_windows_net_name": {
+            "value": null
+        },
+        "actionGroups_Application_Insights_Smart_Detection_name": {
+            "value": null
+        },
+        "components_StaticWebApp_Marketing_FranceCentral_O3M_name": {
+            "value": null
+        },
+        "workspaces_DefaultWorkspace_9f1175b8_7059_4b6a_8c09_43032c79d56c_PAR_externalid": {
+            "value": null
+        },
+        "virtualNetworks_Vnet_Sharedservices_FranceCentral_O3M_externalid": {
+            "value": null
+        }
+    }
+}
