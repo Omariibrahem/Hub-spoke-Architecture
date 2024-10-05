@@ -7,6 +7,7 @@ Key Challenges:
 Scalability Limitations: The infrastructure struggled to accommodate the rising client demands, resulting in potential service disruptions.
 Performance Bottlenecks: Slow response times and frequent downtimes negatively impacted both service delivery and internal operations.
 Security Concerns: With an influx of sensitive data, robust security measures were essential to ensure data protection and regulatory compliance.
+
 Solution Overview:
 Scalability: I designed and implemented a hub-and-spoke architecture, allowing for independent scaling of each spoke based on workload requirements. This architecture provided the necessary flexibility to dynamically adjust to departmental needs.
 
